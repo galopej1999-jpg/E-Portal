@@ -1,0 +1,14 @@
+{
+  "name": "ejustice/portal",
+  "description": "eJustice Portal - Online Blotter and Court Escalation System",
+  "type": "project",
+  "require": {
+    "php": ">=8.0"
+  },
+  "authors": [
+    {
+      "name": "eJustice Development Team",
+      "email": "dev@ejustice.local"
+    }
+  ]
+}
