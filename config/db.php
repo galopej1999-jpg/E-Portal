@@ -9,10 +9,16 @@ try {
     ]);
 } catch (PDOException $e) {
     $errorMsg = $e->getMessage();
-    // Check if DATABASE_URL is set
+    // Diagnostic info
     $dbUrl = getenv('DATABASE_URL');
-    if (!$dbUrl) {
-        $errorMsg .= " [Note: DATABASE_URL env var not set. Using defaults: " . DB_HOST . ":" . DB_PORT . "]";
-    }
+    $dbHost = getenv('DB_HOST');
+    $dbUser = getenv('DB_USER');
+    $errorMsg .= "\n[Diagnostics]\n";
+    $errorMsg .= "DATABASE_URL set: " . ($dbUrl ? "yes" : "no") . "\n";
+    $errorMsg .= "DB_HOST env: " . ($dbHost ? $dbHost : "not set") . "\n";
+    $errorMsg .= "DB_HOST const: " . DB_HOST . "\n";
+    $errorMsg .= "DB_PORT const: " . DB_PORT . "\n";
+    $errorMsg .= "DB_NAME const: " . DB_NAME . "\n";
+    $errorMsg .= "DSN: " . $dsn . "\n";
     die('Database connection failed: ' . $errorMsg);
 }
