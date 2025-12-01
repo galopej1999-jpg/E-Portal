@@ -3,7 +3,8 @@
   "description": "eJustice Portal - Online Blotter and Court Escalation System",
   "type": "project",
   "require": {
-    "php": ">=8.0"
+    "php": ">=8.0",
+    "ext-pdo_mysql": "*"
   },
   "authors": [
     {
