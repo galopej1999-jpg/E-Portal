@@ -36,18 +36,69 @@ Deployment
 ----------
 Choose your deployment method:
 
-**PRODUCTION RECOMMENDED: Netlify + Railway**
-- Host frontend on Netlify CDN (global, fast)
-- Host backend on Railway (managed PHP + MySQL)
+**PRODUCTION RECOMMENDED: Railway Only** ⭐
+- Deploy full PHP backend + MySQL to Railway
 - Auto-deployment on git push
-- Best for: Scale, reliability, global audience
+- Best for: Scale, reliability, managed infrastructure
+- Cost: ~$5–20/month
 - See: NETLIFY_RAILWAY_GUIDE.md + NETLIFY_RAILWAY_CHECKLIST.txt
-- Cost: ~$10–30/month
+- Access at: https://your-railway-app.up.railway.app
 
 **LOCAL DEVELOPMENT: XAMPP**
-- Simple local setup
+- Simple local setup on Windows
 - Good for testing and development
 - See steps below
+
+Railway Production Setup (Recommended)
+--------------------------------------
+1. **Create a Railway account** at https://railway.app
+
+2. **Connect your GitHub repository:**
+   - New Project → GitHub → Select your E-Portal repo
+   - Railway will detect the PHP app automatically
+
+3. **Add MySQL database:**
+   - Click "+" → MySQL
+   - Railway auto-provisions a managed MySQL database
+
+4. **Configure environment variables:**
+   - Go to your service Variables tab
+   - Add: MYSQL_URL = ${{ MySQL.MYSQL_URL }}
+   - Add: DOC_ENC_KEY = your-long-random-secret-string
+   - Add: APP_ENV = production
+
+5. **Deploy:**
+   - Click "Deploy"
+   - Wait 2-3 minutes for build and deployment
+   - Your app will be live at: https://your-service-name.up.railway.app/
+
+6. **First time setup:**
+   - Visit: https://your-service-name.up.railway.app/seed_demo_users.php
+   - This seeds the database with demo users (one-time only)
+   - IMPORTANT: Delete this file after seeding for security
+
+7. **Access your app:**
+   - URL: https://your-service-name.up.railway.app/login.php
+   - Email: admin@example.com
+   - Password: password
+
+8. **After deployment, remove temporary endpoints:**
+   - Delete `/public/run_migrations.php`
+   - Delete `/public/seed_demo_users.php`
+   - Commit and push to trigger redeploy
+
+Demo User Accounts (after seeding)
+-----------------------------------
+- system_admin     : admin@example.com / password
+- complainant      : complainant@example.com / password
+- police_staff     : police@example.com / password
+- mtc_staff        : mtcstaff@example.com / password
+- mtc_judge        : mtcjudge@example.com / password
+- rtc_staff        : rtcstaff@example.com / password
+- rtc_judge        : rtcjudge@example.com / password
+- barangay_staff   : barangay@example.com / password
+- punong_barangay  : punongbarangay@example.com / password
+- lupon_secretary  : lupon@example.com / password
 
 Local Installation (XAMPP)
 --------------------------
@@ -75,20 +126,8 @@ Local Installation (XAMPP)
    - In your browser, open: http://localhost/ejustice_portal/public/seed_demo_users.php
    - It will create default demo accounts and barangay information (only once).
 
-   Demo logins (after seeding):
-   - system_admin : admin@example.com / password
-   - complainant  : complainant@example.com / password
-   - police       : police@example.com / password
-   - mtc_staff    : mtcstaff@example.com / password
-   - mtc_judge    : mtcjudge@example.com / password
-   - rtc_staff    : rtcstaff@example.com / password
-   - rtc_judge    : rtcjudge@example.com / password
-   - barangay_staff : barangay@example.com / password
-   - punong_barangay : punongbarangay@example.com / password
-   - lupon_secretary : lupon@example.com / password
-
 6. Open the site:
-   - http://localhost/ejustice_portal/public/
+   - http://localhost/ejustice_portal/public/login.php
 
 Barangay Workflow
 -----------------
@@ -127,12 +166,17 @@ For production deployment, use one of these options:
    - Full responsibility for infrastructure
    - Best for: Maximum control, offline deployment capability
 
-Quick Start for Production:
-   1. Read NETLIFY_SETUP_GUIDE.md (comprehensive, step-by-step)
-   2. OR use NETLIFY_DEPLOYMENT_CHECKLIST.txt (quick checklist)
-   3. Deploy backend to Railway/Render
-   4. Deploy frontend to Netlify
-   5. Update netlify.toml with your backend URL
+Quick Start for Production (Railway):
+   1. Sign up at https://railway.app
+   2. Create new project → Connect GitHub repo
+   3. Add MySQL database plugin
+   4. Set MYSQL_URL env var to ${{ MySQL.MYSQL_URL }}
+   5. Deploy
+   6. Visit /seed_demo_users.php to seed database
+   7. Delete seed_demo_users.php and run_migrations.php after setup
+   8. Login at /login.php with admin@example.com / password
+
+For detailed Railway setup, see: NETLIFY_RAILWAY_CHECKLIST.txt
 
 Notes
 -----
