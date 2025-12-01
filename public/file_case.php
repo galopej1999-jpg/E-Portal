@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 (case_number, barangay_id, parent_case_id, stage, status, complainant_id, respondent_name, 
                  incident_details, incident_datetime, location, created_by, complaint_type, complaint_subtype)
                 VALUES
-                (:case_number, :barangay_id, NULL, 'barangay_initial', 'PENDING_BARANGAY', :complainant_id, 
+                (:case_number, :barangay_id, NULL, 'police_blotter', 'PENDING_BARANGAY', :complainant_id, 
                  :respondent_name, :incident_details, :incident_datetime, :location, :created_by, 
                  :complaint_type, :complaint_subtype)");
             
