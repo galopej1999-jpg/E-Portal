@@ -1,6 +1,6 @@
 <?php
 // General app configuration
-// Support both Railway DATABASE_URL and local development credentials
+// Support Railway DATABASE_URL, individual env vars, or local development credentials
 
 if ($dbUrl = getenv('DATABASE_URL')) {
     // Parse Railway DATABASE_URL: mysql://user:password@host:port/database
@@ -10,6 +10,13 @@ if ($dbUrl = getenv('DATABASE_URL')) {
     define('DB_NAME', ltrim($parsed['path'] ?? '', '/'));
     define('DB_USER', $parsed['user'] ?? 'root');
     define('DB_PASS', $parsed['pass'] ?? '');
+} elseif (getenv('DB_HOST')) {
+    // Use individual Railway environment variables
+    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+    define('DB_PORT', (int)(getenv('DB_PORT') ?: 3306));
+    define('DB_NAME', getenv('DB_NAME') ?: 'ejustice_portal');
+    define('DB_USER', getenv('DB_USER') ?: 'root');
+    define('DB_PASS', getenv('DB_PASS') ?: '');
 } else {
     // Local development defaults
     define('DB_HOST', 'localhost');
