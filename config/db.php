@@ -8,5 +8,11 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 } catch (PDOException $e) {
-    die('Database connection failed: ' . $e->getMessage());
+    $errorMsg = $e->getMessage();
+    // Check if DATABASE_URL is set
+    $dbUrl = getenv('DATABASE_URL');
+    if (!$dbUrl) {
+        $errorMsg .= " [Note: DATABASE_URL env var not set. Using defaults: " . DB_HOST . ":" . DB_PORT . "]";
+    }
+    die('Database connection failed: ' . $errorMsg);
 }
