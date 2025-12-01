@@ -4,7 +4,7 @@
 [build]
   # Point to the public folder as the publish directory (where Netlify serves static files from)
   publish = "public"
-  # No build command needed - public folder is already ready
+  # No build command needed - public folder is already ready (no PHP execution on Netlify)
   command = ""
 
 # Redirect all requests to Railway backend (proxies PHP requests)

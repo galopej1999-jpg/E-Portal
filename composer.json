@@ -6,6 +6,11 @@
     "php": ">=8.0",
     "ext-pdo_mysql": "*"
   },
+  "config": {
+    "platform": {
+      "ext-pdo_mysql": "1.0"
+    }
+  },
   "authors": [
     {
       "name": "eJustice Development Team",
