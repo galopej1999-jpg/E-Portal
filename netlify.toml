@@ -1,13 +1,13 @@
 # Netlify Configuration for eJustice Portal
-# This config file enables redirects and proxies backend API calls to your Railway PHP backend
+# This site serves static files (landing page) and proxies backend to Railway
 
 [build]
   # Point to the public folder as the publish directory (where Netlify serves static files from)
   publish = "public"
-  # No build command needed; this is already a PHP app, builds happen on Railway
+  # No build command needed - public folder is already ready
   command = ""
 
-# Redirect all requests to Railway backend (except static assets handled by Netlify)
+# Redirect all requests to Railway backend (proxies PHP requests)
 [[redirects]]
   from = "/*"
   to = "https://giving-smile-production.up.railway.app/:splat"
@@ -22,3 +22,4 @@
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
