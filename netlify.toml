@@ -10,7 +10,7 @@
 # Redirect all requests to Railway backend (except static assets handled by Netlify)
 [[redirects]]
   from = "/*"
-  to = "RAILWAY_BACKEND_URL/:splat"
+  to = "https://giving-smile-production.up.railway.app/:splat"
   status = 200
   force = true
 

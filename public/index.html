@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>eJustice Portal — Landing</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#f7fafc }
+    .card { background:white; padding:28px; border-radius:8px; box-shadow:0 6px 24px rgba(20,20,40,0.08); max-width:720px; width:100% }
+    .header { display:flex; align-items:center; gap:12px }
+    .logo { width:56px; height:56px; border-radius:8px; background:#0b69ff; display:inline-block }
+    .actions { margin-top:18px; display:flex; gap:8px; flex-wrap:wrap }
+    a.button { background:#0b69ff; color:white; padding:10px 14px; border-radius:6px; text-decoration:none }
+    a.ghost { background:transparent; border:1px solid #d0d7de; color:#0f1724 }
+    .muted { color:#6b7280; margin-top:8px }
+    small { color:#9ca3af }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="logo" aria-hidden></div>
+      <div>
+        <h1 style="margin:0;font-size:20px">eJustice Portal</h1>
+        <div class="muted">Static landing page — forwards to your Railway PHP backend</div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px">This site runs as a PHP application on Railway. Replace the placeholder below with your public Railway URL (including <code>https://</code>) so links and redirects work from Netlify.</p>
+
+    <pre style="background:#f3f4f6;padding:8px;border-radius:6px">const RAILWAY_URL = 'REPLACE_WITH_RAILWAY_URL';</pre>
+
+    <div class="actions">
+      <a id="openApp" class="button" href="#">Open App</a>
+      <a id="openLogin" class="ghost" href="#">Login</a>
+      <a id="openMigrate" class="ghost" href="#">Run Migrations (admin)</a>
+    </div>
+
+    <p class="muted" style="margin-top:14px">Tip: Edit <code>public/index.html</code> in your repo and replace <code>REPLACE_WITH_RAILWAY_URL</code> with your Railway public URL, then commit and push to trigger Netlify deploy.</p>
+
+    <script>
+      // Replace this value with your public Railway URL (include https://)
+      const RAILWAY_URL = 'https://giving-smile-production.up.railway.app';
+
+      function build(path) {
+        if (!RAILWAY_URL || RAILWAY_URL.includes('REPLACE_WITH_RAILWAY_URL')) return '#';
+        return RAILWAY_URL.replace(/\/$/, '') + '/' + path.replace(/^\//, '');
+      }
+
+      document.getElementById('openApp').href = build('index.php');
+      document.getElementById('openLogin').href = build('login.php');
+      document.getElementById('openMigrate').href = build('run_migrations.php');
+
+      // Auto-redirect if the placeholder has been replaced
+      if (!RAILWAY_URL.includes('REPLACE_WITH_RAILWAY_URL')) {
+        setTimeout(() => { window.location.href = build('index.php'); }, 1200);
+      }
+    </script>
+  </div>
+</body>
+</html>
