@@ -1,10 +1,18 @@
 <?php
 // Run migrations endpoint (use only in controlled environments)
-require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../config/db.php';
+session_start();
 
-// Only allow system_admin users to run migrations
-if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'system_admin') {
+// Check if user is logged in AND is system_admin, OR if this is the first run (no users table yet)
+$isFirstRun = false;
+try {
+    $pdo->query("SELECT 1 FROM users LIMIT 1");
+} catch (PDOException $e) {
+    // users table doesn't exist yet - allow first run
+    $isFirstRun = true;
+}
+
+if (!$isFirstRun && (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'system_admin')) {
     http_response_code(403);
     echo "Unauthorized. Must be logged in as system_admin.";
     exit;
