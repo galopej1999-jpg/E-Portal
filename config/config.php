@@ -1,8 +1,17 @@
 <?php
 // General app configuration
-// Support Railway DATABASE_URL, individual env vars, or local development credentials
+// Support Railway MYSQL_URL reference, DATABASE_URL, individual env vars, or local development credentials
 
-if ($dbUrl = getenv('DATABASE_URL')) {
+// Try MYSQL_URL first (Railway reference: ${{ MySQL.MYSQL_URL }})
+if ($mysqlUrl = getenv('MYSQL_URL')) {
+    // Parse MySQL URL: mysql://user:password@host:port/database
+    $parsed = parse_url($mysqlUrl);
+    define('DB_HOST', $parsed['host'] ?? 'localhost');
+    define('DB_PORT', $parsed['port'] ?? 3306);
+    define('DB_NAME', ltrim($parsed['path'] ?? '', '/'));
+    define('DB_USER', $parsed['user'] ?? 'root');
+    define('DB_PASS', $parsed['pass'] ?? '');
+} elseif ($dbUrl = getenv('DATABASE_URL')) {
     // Parse Railway DATABASE_URL: mysql://user:password@host:port/database
     $parsed = parse_url($dbUrl);
     define('DB_HOST', $parsed['host'] ?? 'localhost');
