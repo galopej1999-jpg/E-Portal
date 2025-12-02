@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $respondent_name = trim($_POST['respondent_name'] ?? '');
     $incident_details = trim($_POST['incident_details'] ?? '');
     $incident_datetime = trim($_POST['incident_datetime'] ?? '');
-    $location = trim($_POST['location'] ?? '');
+    // Ensure location fits DB column (VARCHAR(255)) to avoid truncation errors
+    $location = mb_substr(trim($_POST['location'] ?? ''), 0, 255);
     $complaint_type = $_POST['complaint_type'] ?? '';
     $complaint_subtype = trim($_POST['complaint_subtype'] ?? '');
     $barangay_id = (int)($_POST['barangay_id'] ?? 0);

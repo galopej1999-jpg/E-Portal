@@ -56,6 +56,10 @@ function escalateToPoliceBlotter($pdo, $barangayRecordId, $cfaNumber, $userId) {
                     :incident_details, :incident_datetime, :location, :created_by, 
                     :complaint_type, :complaint_subtype)");
         
+        // Determine a safe location value (prefer complainant_address, fallback to respondent_address or incident_details)
+        $rawLocation = $barangayRecord['complainant_address'] ?? $barangayRecord['respondent_address'] ?? $barangayRecord['incident_details'] ?? '';
+        $safeLocation = mb_substr(trim($rawLocation), 0, 255);
+
         $createCaseStmt->execute([
             ':case_number' => $caseNumber,
             ':stage' => 'police_blotter',
@@ -64,7 +68,7 @@ function escalateToPoliceBlotter($pdo, $barangayRecordId, $cfaNumber, $userId) {
             ':respondent_name' => $barangayRecord['respondent_name'],
             ':incident_details' => $barangayRecord['nature_of_dispute'] . "\n\nEscalated from Barangay Case #" . $barangayRecord['complaint_number'] . " (CFA: " . $cfaNumber . ")",
             ':incident_datetime' => $barangayRecord['incident_date'] ? $barangayRecord['incident_date'] . ' 00:00:00' : date('Y-m-d H:i:s'),
-            ':location' => $barangayRecord['incident_details'],
+            ':location' => $safeLocation,
             ':created_by' => $policeUserId,
             ':complaint_type' => strtolower($barangayRecord['dispute_category']),
             ':complaint_subtype' => $barangayRecord['dispute_subcategory']
