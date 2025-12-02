@@ -18,7 +18,7 @@ if (!$docId) {
     die("Invalid document id");
 }
 
-$sql = "SELECT d.*, c.stage, c.complainant_id 
+$sql = "SELECT d.*, c.stage, c.complainant_id, c.parent_case_id
         FROM case_documents d
         JOIN cases c ON d.case_id = c.id
         WHERE d.id = :id";
@@ -30,15 +30,38 @@ if (!$doc) {
     die("Document not found");
 }
 
-// Enforce stage-based access
-if ($userRole === 'police_staff' && $doc['stage'] !== 'police_blotter') {
-    die("Access denied (wrong stage)");
+// Helper: Get all stages in the escalation chain leading to or including a given case
+function getCaseEscalationChain($pdo, $caseId) {
+    $stages = [];
+    $currentId = $caseId;
+    while ($currentId) {
+        $stmt = $pdo->prepare("SELECT id, stage, parent_case_id FROM cases WHERE id = :id");
+        $stmt->execute([':id' => $currentId]);
+        $row = $stmt->fetch();
+        if (!$row) break;
+        $stages[] = $row['stage'];
+        $currentId = $row['parent_case_id'];
+    }
+    return array_unique($stages);
 }
-if (in_array($userRole, ['mtc_staff','mtc_judge']) && $doc['stage'] !== 'mtc_case') {
-    die("Access denied (wrong stage)");
+
+// Get the escalation chain for the document's source case
+$escalationChain = getCaseEscalationChain($pdo, $doc['case_id']);
+
+// Enforce stage-based access: allow viewing if user's stage is in the escalation chain
+$userCanAccess = false;
+if ($userRole === 'police_staff' && in_array('police_blotter', $escalationChain)) {
+    $userCanAccess = true;
 }
-if (in_array($userRole, ['rtc_staff','rtc_judge']) && $doc['stage'] !== 'rtc_case') {
-    die("Access denied (wrong stage)");
+if (in_array($userRole, ['mtc_staff','mtc_judge']) && in_array('mtc_case', $escalationChain)) {
+    $userCanAccess = true;
+}
+if (in_array($userRole, ['rtc_staff','rtc_judge']) && in_array('rtc_case', $escalationChain)) {
+    $userCanAccess = true;
+}
+
+if (!$userCanAccess) {
+    die("Access denied (document not in your jurisdiction)");
 }
 
 $storageDir = __DIR__ . '/../storage/documents/';

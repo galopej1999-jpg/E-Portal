@@ -117,9 +117,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Load documents
-$stmtDoc = $pdo->prepare("SELECT * FROM case_documents WHERE case_id = :cid ORDER BY created_at DESC");
-$stmtDoc->execute([':cid' => $case_id]);
+// Load documents from current case and all parent cases (escalation chain)
+$caseIds = [$case_id];
+$currentCaseId = $case_id;
+while (true) {
+    $parentStmt = $pdo->prepare("SELECT parent_case_id FROM cases WHERE id = :id");
+    $parentStmt->execute([':id' => $currentCaseId]);
+    $parentRow = $parentStmt->fetch();
+    if (!$parentRow || !$parentRow['parent_case_id']) {
+        break;
+    }
+    $caseIds[] = $parentRow['parent_case_id'];
+    $currentCaseId = $parentRow['parent_case_id'];
+}
+
+$placeholders = implode(',', array_fill(0, count($caseIds), '?'));
+$stmtDoc = $pdo->prepare("SELECT * FROM case_documents WHERE case_id IN ($placeholders) ORDER BY created_at DESC");
+$stmtDoc->execute($caseIds);
 $docs = $stmtDoc->fetchAll();
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
