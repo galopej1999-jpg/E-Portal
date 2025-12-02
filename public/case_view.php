@@ -131,10 +131,15 @@ while (true) {
     $currentCaseId = $parentRow['parent_case_id'];
 }
 
-$placeholders = implode(',', array_fill(0, count($caseIds), '?'));
-$stmtDoc = $pdo->prepare("SELECT * FROM case_documents WHERE case_id IN ($placeholders) ORDER BY created_at DESC");
-$stmtDoc->execute($caseIds);
-$docs = $stmtDoc->fetchAll();
+// Query all documents from this case and parent cases
+if (!empty($caseIds)) {
+    $placeholders = implode(',', array_fill(0, count($caseIds), '?'));
+    $stmtDoc = $pdo->prepare("SELECT * FROM case_documents WHERE case_id IN ($placeholders) ORDER BY created_at DESC");
+    $stmtDoc->execute($caseIds);
+    $docs = $stmtDoc->fetchAll() ?: [];
+} else {
+    $docs = [];
+}
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
@@ -198,6 +203,9 @@ $docs = $stmtDoc->fetchAll();
 <div class="card mb-3">
   <div class="card-body">
     <h5>Encrypted Documents</h5>
+    <?php if (empty($docs)): ?>
+      <p class="text-muted">No documents uploaded yet.</p>
+    <?php else: ?>
     <table class="table table-sm">
       <thead>
         <tr>
@@ -226,6 +234,7 @@ $docs = $stmtDoc->fetchAll();
         <?php endforeach; ?>
       </tbody>
     </table>
+    <?php endif; ?>
   </div>
 </div>
 

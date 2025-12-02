@@ -49,10 +49,13 @@ function escalateToPoliceBlotter($pdo, $barangayRecordId, $cfaNumber, $userId) {
         $caseNumber = 'PB-' . $monthYear . '-' . str_pad($count, 5, '0', STR_PAD_LEFT);
         
         // Create case in main cases table (police_blotter stage)
+        // Link to the original online case via parent_case_id (for document inheritance)
+        $parentCaseId = $barangayRecord['online_case_id'] ?? null;
+        
         $createCaseStmt = $pdo->prepare("INSERT INTO cases 
-            (case_number, stage, status, complainant_id, respondent_name, incident_details, 
+            (case_number, parent_case_id, stage, status, complainant_id, respondent_name, incident_details, 
              incident_datetime, location, created_by, complaint_type, complaint_subtype)
-            VALUES (:case_number, :stage, :status, :complainant_id, :respondent_name, 
+            VALUES (:case_number, :parent_case_id, :stage, :status, :complainant_id, :respondent_name, 
                     :incident_details, :incident_datetime, :location, :created_by, 
                     :complaint_type, :complaint_subtype)");
         
@@ -62,6 +65,7 @@ function escalateToPoliceBlotter($pdo, $barangayRecordId, $cfaNumber, $userId) {
 
         $createCaseStmt->execute([
             ':case_number' => $caseNumber,
+            ':parent_case_id' => $parentCaseId,
             ':stage' => 'police_blotter',
             ':status' => 'FILED',
             ':complainant_id' => $barangayRecord['complainant_id'] ?? $userId,
