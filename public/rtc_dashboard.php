@@ -31,7 +31,7 @@ $activeCases = $activeCasesStmt->fetch()['total'];
 // Cases decided this month
 $decidedStmt = $pdo->prepare("SELECT COUNT(*) as total FROM cases 
                              WHERE stage = 'rtc_case' AND status = 'decided'
-                             AND DATE(updated_at) BETWEEN :start AND :end");
+                             AND DATE(created_at) BETWEEN :start AND :end");
 $decidedStmt->execute([':start' => $thisMonth, ':end' => date('Y-m-t')]);
 $decidedMonth = $decidedStmt->fetch()['total'];
 
