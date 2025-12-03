@@ -50,6 +50,14 @@ $recentCasesStmt = $pdo->prepare("SELECT * FROM cases
 $recentCasesStmt->execute();
 $recentCases = $recentCasesStmt->fetchAll();
 
+// Get cases pending review
+$pendingCasesStmt = $pdo->prepare("SELECT * FROM cases 
+                                  WHERE stage = 'police_blotter' 
+                                  AND status IN ('FILED', 'PENDING_BARANGAY')
+                                  ORDER BY created_at ASC LIMIT 10");
+$pendingCasesStmt->execute();
+$pendingCases = $pendingCasesStmt->fetchAll();
+
 // Get cases ready for escalation
 $readyForEscalationStmt = $pdo->prepare("SELECT * FROM cases 
                                         WHERE stage = 'police_blotter' 
@@ -246,6 +254,57 @@ $activities = $activitiesStmt->fetchAll();
             </div>
         </div>
     </div>
+
+    <!-- Cases Pending Review -->
+    <?php if (!empty($pendingCases)): ?>
+    <div class="row mb-4" id="pending-section">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <strong>⏳ Cases Pending Review</strong>
+                <p class="mb-0">There are <strong><?php echo count($pendingCases); ?></strong> case(s) awaiting initial review and processing.</p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card card-court">
+                <div class="card-header">
+                    ⏳ Pending Review Cases
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Case #</th>
+                                    <th>Complainant</th>
+                                    <th>Respondent</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Filed Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pendingCases as $case): ?>
+                                    <tr>
+                                        <td><strong><?php echo htmlspecialchars($case['case_number']); ?></strong></td>
+                                        <td><?php echo htmlspecialchars(substr($case['respondent_name'], 0, 20)); ?></td>
+                                        <td><?php echo htmlspecialchars($case['respondent_name']); ?></td>
+                                        <td><span class="badge bg-info"><?php echo ucfirst($case['complaint_type']); ?></span></td>
+                                        <td><span class="badge bg-warning"><?php echo htmlspecialchars($case['status']); ?></span></td>
+                                        <td><?php echo date('M d, Y', strtotime($case['created_at'])); ?></td>
+                                        <td>
+                                            <a href="case_view.php?id=<?php echo $case['id']; ?>" class="btn btn-sm btn-info">Review</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Cases Ready for Escalation -->
     <?php if (!empty($readyForEscalation)): ?>
