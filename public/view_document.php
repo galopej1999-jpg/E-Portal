@@ -30,18 +30,40 @@ if (!$doc) {
     die("Document not found");
 }
 
-// Helper: Get all stages in the escalation chain leading to or including a given case
+// Helper: Get all stages in the escalation chain (both ancestors and descendants)
 function getCaseEscalationChain($pdo, $caseId) {
     $stages = [];
+    
+    // First, walk UP to find all parent cases
     $currentId = $caseId;
+    $ancestorIds = [];
     while ($currentId) {
         $stmt = $pdo->prepare("SELECT id, stage, parent_case_id FROM cases WHERE id = :id");
         $stmt->execute([':id' => $currentId]);
         $row = $stmt->fetch();
         if (!$row) break;
         $stages[] = $row['stage'];
+        $ancestorIds[] = $row['id'];
         $currentId = $row['parent_case_id'];
     }
+    
+    // Then, walk DOWN to find all child cases
+    $childIds = [$caseId];
+    $processed = [];
+    while (!empty($childIds)) {
+        $currentId = array_shift($childIds);
+        if (in_array($currentId, $processed)) continue;
+        $processed[] = $currentId;
+        
+        $stmt = $pdo->prepare("SELECT id, stage FROM cases WHERE parent_case_id = :id");
+        $stmt->execute([':id' => $currentId]);
+        $children = $stmt->fetchAll();
+        foreach ($children as $child) {
+            $stages[] = $child['stage'];
+            $childIds[] = $child['id'];
+        }
+    }
+    
     return array_unique($stages);
 }
 
