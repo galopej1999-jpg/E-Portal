@@ -14,6 +14,7 @@ $migrations = [
     '003_add_barangay_module.sql' => 'Barangay module',
     '004_add_barangay_case_routing.sql' => 'Case routing',
     '005_add_locations.sql' => 'Location management',
+    '006_add_barangay_to_users.sql' => 'Add barangay assignment to users',
 ];
 
 $sqlDir = __DIR__ . '/../sql/';
