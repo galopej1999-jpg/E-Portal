@@ -26,6 +26,10 @@
 /barangay_settlement_form.php https://giving-smile-production.up.railway.app/barangay_settlement_form.php           200!
 
 # Admin/Audit
+/admin_dashboard.php          https://giving-smile-production.up.railway.app/admin_dashboard.php                    200!
+/admin_users.php              https://giving-smile-production.up.railway.app/admin_users.php                        200!
+/admin_barangays.php          https://giving-smile-production.up.railway.app/admin_barangays.php                    200!
+/admin_locations.php          https://giving-smile-production.up.railway.app/admin_locations.php                    200!
 /audit_logs.php               https://giving-smile-production.up.railway.app/audit_logs.php                         200!
 /seed_demo_users.php          https://giving-smile-production.up.railway.app/seed_demo_users.php                    200!
 
