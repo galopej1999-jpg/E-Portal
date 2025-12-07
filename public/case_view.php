@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_login();
+require_once __DIR__ . '/../includes/audit.php';
 
 $role = current_user_role();
 $user_id = $_SESSION['user_id'];
@@ -45,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($new_status) {
             $stmtUp = $pdo->prepare("UPDATE cases SET status = :st WHERE id = :id");
             $stmtUp->execute([':st' => $new_status, ':id' => $case_id]);
+        // Log status update so complainant can see the change
+        logAuditAction($pdo, $user_id, 'CASE_UPDATE', null, $case_id, "Status set to $new_status");
             $message = "Status updated.";
             $case['status'] = $new_status;
         }
@@ -74,6 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             $stmtUp = $pdo->prepare("UPDATE cases SET status = 'escalated_to_mtc' WHERE id = :id");
             $stmtUp->execute([':id' => $case_id]);
+        // Log escalation for audit and complainant notification
+        logAuditAction($pdo, $user_id, 'ESCALATED_TO_MTC', null, $case_id, "Escalated to MTC as $mtc_case_number");
+        logAuditAction($pdo, $user_id, 'CASE_CREATE', null, $pdo->lastInsertId(), "MTC case created from case $case_id: $mtc_case_number");
             $pdo->commit();
             $message = "Case escalated to MTC as $mtc_case_number.";
             $case['status'] = 'escalated_to_mtc';
@@ -107,6 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             $stmtUp = $pdo->prepare("UPDATE cases SET status = 'escalated_to_rtc' WHERE id = :id");
             $stmtUp->execute([':id' => $case_id]);
+            // Log escalation for audit and complainant notification
+            logAuditAction($pdo, $user_id, 'ESCALATED_TO_RTC', null, $case_id, "Escalated to RTC as $rtc_case_number");
+            logAuditAction($pdo, $user_id, 'CASE_CREATE', null, $pdo->lastInsertId(), "RTC case created from case $case_id: $rtc_case_number");
             $pdo->commit();
             $message = "Case escalated to RTC as $rtc_case_number.";
             $case['status'] = 'escalated_to_rtc';
@@ -248,6 +257,41 @@ if (!empty($caseIds)) {
       </div>
       <button type="submit" class="btn btn-primary btn-sm">Upload & Encrypt</button>
     </form>
+  </div>
+</div>
+
+<!-- Case Activity / Audit Feed -->
+<?php
+if (!empty($caseIds)) {
+    $placeholders = implode(',', array_fill(0, count($caseIds), '?'));
+    $stmtAudit = $pdo->prepare("SELECT al.*, u.full_name AS actor FROM audit_logs al LEFT JOIN users u ON al.user_id = u.id WHERE al.case_id IN ($placeholders) ORDER BY al.created_at DESC LIMIT 50");
+    $stmtAudit->execute($caseIds);
+    $activities = $stmtAudit->fetchAll() ?: [];
+} else {
+    $activities = [];
+}
+?>
+<div class="card mb-3">
+  <div class="card-body">
+    <h5>Case Activity</h5>
+    <?php if (empty($activities)): ?>
+      <p class="text-muted">No recent activity for this case.</p>
+    <?php else: ?>
+      <ul class="list-group">
+        <?php foreach ($activities as $a): ?>
+          <li class="list-group-item">
+            <div><strong><?php echo htmlspecialchars($a['actor'] ?: 'System'); ?></strong>
+              <small class="text-muted">&nbsp;&middot;&nbsp;<?php echo htmlspecialchars($a['created_at']); ?></small>
+            </div>
+            <div><?php echo htmlspecialchars(getActionLabel($a['action'])); ?>
+              <?php if (!empty($a['action_details'])): ?>
+                - <?php echo htmlspecialchars($a['action_details']); ?>
+              <?php endif; ?>
+            </div>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
   </div>
 </div>
 

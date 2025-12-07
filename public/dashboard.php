@@ -6,7 +6,10 @@ require_login();
 $role = current_user_role();
 
 // Redirect to role-specific dashboards
-if ($role === 'barangay_staff' || $role === 'punong_barangay' || $role === 'lupon_secretary') {
+if ($role === 'system_admin') {
+    header('Location: admin_dashboard.php');
+    exit;
+} elseif ($role === 'barangay_staff' || $role === 'punong_barangay' || $role === 'lupon_secretary') {
     header('Location: barangay_dashboard.php');
     exit;
 } elseif ($role === 'police_staff') {
