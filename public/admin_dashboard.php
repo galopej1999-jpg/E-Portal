@@ -12,20 +12,8 @@ if (current_user_role() !== 'system_admin') {
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
 $total_users = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM barangay_info");
-$total_barangays = $stmt->fetch()['count'];
-
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM locations");
 $total_locations = $stmt->fetch()['count'];
-
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM cases");
-$total_cases = $stmt->fetch()['count'];
-
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM case_documents");
-$total_documents = $stmt->fetch()['count'];
-
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM audit_logs");
-$total_audit_logs = $stmt->fetch()['count'];
 
 // Get user role distribution
 $stmt = $pdo->query("SELECT role, COUNT(*) as count FROM users GROUP BY role ORDER BY count DESC");
@@ -43,7 +31,7 @@ $recent_users = $stmt->fetchAll();
 
   <!-- Statistics Cards -->
   <div class="row mb-4">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="card text-bg-primary">
         <div class="card-body">
           <h5 class="card-title">Total Users</h5>
@@ -51,46 +39,11 @@ $recent_users = $stmt->fetchAll();
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="card text-bg-success">
-        <div class="card-body">
-          <h5 class="card-title">Barangays</h5>
-          <h2><?php echo $total_barangays; ?></h2>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="card text-bg-info">
         <div class="card-body">
           <h5 class="card-title">Locations</h5>
           <h2><?php echo $total_locations; ?></h2>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card text-bg-warning">
-        <div class="card-body">
-          <h5 class="card-title">Cases</h5>
-          <h2><?php echo $total_cases; ?></h2>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <div class="col-md-3">
-      <div class="card text-bg-secondary">
-        <div class="card-body">
-          <h5 class="card-title">Documents</h5>
-          <h2><?php echo $total_documents; ?></h2>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card text-bg-dark">
-        <div class="card-body">
-          <h5 class="card-title">Audit Logs</h5>
-          <h2><?php echo $total_audit_logs; ?></h2>
         </div>
       </div>
     </div>
