@@ -381,7 +381,7 @@ $activities = $activitiesStmt->fetchAll();
                                         <tr>
                                             <td><?php echo htmlspecialchars($activity['case_number'] ?? '-'); ?></td>
                                             <td><?php echo htmlspecialchars($activity['full_name'] ?? 'Unknown'); ?></td>
-                                            <td><span class="badge bg-info"><?php echo htmlspecialchars($activity['action_type']); ?></span></td>
+                                            <td><span class="badge bg-info"><?php echo htmlspecialchars($activity['action'] ?? 'N/A'); ?></span></td>
                                             <td><small><?php echo date('M d, Y H:i', strtotime($activity['created_at'])); ?></small></td>
                                         </tr>
                                     <?php endforeach; ?>

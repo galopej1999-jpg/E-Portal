@@ -431,7 +431,7 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_KEY_PAIR);
                                                         'ESCALATED_TO_POLICE' => '⚠️ Escalated to Police',
                                                         'SETTLEMENT_FORM_CREATED' => '✍️ Settlement Form Created'
                                                     ];
-                                                    echo $actions[$activity['action_type']] ?? $activity['action_type'];
+                                                    echo $actions[$activity['action']] ?? $activity['action'];
                                                 ?>
                                             </h6>
                                             <p class="mb-1 small text-muted">
