@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($barangay_name && $municipality && $province) {
             try {
-                $stmt = $pdo->prepare("INSERT INTO barangays (barangay_name, municipality, province, address) VALUES (:name, :municipality, :province, :address)");
+                $stmt = $pdo->prepare("INSERT INTO barangay_info (barangay_name, municipality, province, address) VALUES (:name, :municipality, :province, :address)");
                 $stmt->execute([
                     ':name' => $barangay_name,
                     ':municipality' => $municipality,
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($barangay_name && $municipality && $province) {
             try {
-                $stmt = $pdo->prepare("UPDATE barangays SET barangay_name = :name, municipality = :municipality, province = :province, address = :address WHERE id = :id");
+                $stmt = $pdo->prepare("UPDATE barangay_info SET barangay_name = :name, municipality = :municipality, province = :province, address = :address WHERE id = :id");
                 $stmt->execute([
                     ':name' => $barangay_name,
                     ':municipality' => $municipality,
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($_POST['delete_barangay'])) {
         $barangay_id = (int)$_POST['barangay_id'];
         try {
-            $stmt = $pdo->prepare("DELETE FROM barangays WHERE id = :id");
+            $stmt = $pdo->prepare("DELETE FROM barangay_info WHERE id = :id");
             $stmt->execute([':id' => $barangay_id]);
             $message = "✓ Barangay deleted successfully.";
         } catch (Exception $e) {
@@ -76,13 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Load barangay for edit
 $edit_barangay = null;
 if ($action === 'edit' && $barangay_id) {
-    $stmt = $pdo->prepare("SELECT * FROM barangays WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT * FROM barangay_info WHERE id = :id");
     $stmt->execute([':id' => $barangay_id]);
     $edit_barangay = $stmt->fetch();
 }
 
 // Load all barangays
-$stmt = $pdo->query("SELECT * FROM barangays ORDER BY barangay_name");
+$stmt = $pdo->query("SELECT * FROM barangay_info ORDER BY barangay_name");
 $barangays = $stmt->fetchAll();
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>

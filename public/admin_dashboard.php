@@ -12,7 +12,7 @@ if (current_user_role() !== 'system_admin') {
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
 $total_users = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM barangays");
+$stmt = $pdo->query("SELECT COUNT(*) as count FROM barangay_info");
 $total_barangays = $stmt->fetch()['count'];
 
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM locations");

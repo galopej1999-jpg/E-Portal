@@ -78,11 +78,11 @@ if ($action === 'edit' && $location_id) {
 }
 
 // Load all locations with barangay info
-$stmt = $pdo->query("SELECT l.*, b.barangay_name FROM locations l LEFT JOIN barangays b ON l.barangay_id = b.id ORDER BY b.barangay_name, l.location_name");
+$stmt = $pdo->query("SELECT l.*, b.barangay_name FROM locations l LEFT JOIN barangay_info b ON l.barangay_id = b.id ORDER BY b.barangay_name, l.location_name");
 $locations = $stmt->fetchAll();
 
 // Load barangays for dropdown
-$stmt = $pdo->query("SELECT id, barangay_name FROM barangays ORDER BY barangay_name");
+$stmt = $pdo->query("SELECT id, barangay_name FROM barangay_info ORDER BY barangay_name");
 $barangays = $stmt->fetchAll();
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>

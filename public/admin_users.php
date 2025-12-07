@@ -96,11 +96,11 @@ if ($action === 'edit' && $user_id) {
 }
 
 // Load all users
-$stmt = $pdo->query("SELECT u.*, b.barangay_name FROM users u LEFT JOIN barangays b ON u.barangay_id = b.id ORDER BY u.created_at DESC");
+$stmt = $pdo->query("SELECT u.*, b.barangay_name FROM users u LEFT JOIN barangay_info b ON u.barangay_id = b.id ORDER BY u.created_at DESC");
 $users = $stmt->fetchAll();
 
 // Load barangays for dropdown
-$stmt = $pdo->query("SELECT id, barangay_name FROM barangays ORDER BY barangay_name");
+$stmt = $pdo->query("SELECT id, barangay_name FROM barangay_info ORDER BY barangay_name");
 $barangays = $stmt->fetchAll();
 
 $roles = ['complainant', 'police_staff', 'mtc_staff', 'mtc_judge', 'rtc_staff', 'rtc_judge', 'barangay_staff', 'punong_barangay', 'lupon_secretary', 'system_admin'];
