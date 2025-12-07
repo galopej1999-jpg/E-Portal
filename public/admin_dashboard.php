@@ -34,10 +34,6 @@ $user_roles = $stmt->fetchAll();
 // Get recent users
 $stmt = $pdo->query("SELECT id, email, full_name, role, created_at FROM users ORDER BY created_at DESC LIMIT 5");
 $recent_users = $stmt->fetchAll();
-
-// Get recent cases
-$stmt = $pdo->query("SELECT c.id, c.case_number, c.status, c.stage, u.full_name as complainant FROM cases c JOIN users u ON c.complainant_id = u.id ORDER BY c.created_at DESC LIMIT 5");
-$recent_cases = $stmt->fetchAll();
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
@@ -200,35 +196,6 @@ $recent_cases = $stmt->fetchAll();
                 <td><?php echo htmlspecialchars($u['email']); ?></td>
                 <td><span class="badge bg-info"><?php echo ucfirst(str_replace('_', ' ', $u['role'])); ?></span></td>
                 <td><?php echo $u['created_at']; ?></td>
-              </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Cases -->
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h5>Recent Cases</h5>
-        </div>
-        <div class="card-body" style="max-height: 300px; overflow-y: auto;">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Case #</th>
-                <th>Status</th>
-                <th>Stage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($recent_cases as $c): ?>
-              <tr>
-                <td><a href="case_view.php?id=<?php echo $c['id']; ?>"><?php echo htmlspecialchars($c['case_number']); ?></a></td>
-                <td><span class="badge bg-warning"><?php echo htmlspecialchars($c['status']); ?></span></td>
-                <td><?php echo htmlspecialchars($c['stage']); ?></td>
               </tr>
               <?php endforeach; ?>
             </tbody>
