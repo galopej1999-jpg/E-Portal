@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($email && $full_name && $role && $password) {
             $hashed = password_hash($password, PASSWORD_BCRYPT);
             try {
-                    $stmt = $pdo->prepare("INSERT INTO users (email, full_name, password, role, barangay_id) VALUES (:email, :full_name, :password, :role, :barangay_id)");
+                $stmt = $pdo->prepare("INSERT INTO users (email, full_name, password_hash, role, barangay_id) VALUES (:email, :full_name, :password_hash, :role, :barangay_id)");
                 $stmt->execute([
                     ':email' => $email,
                     ':full_name' => $full_name,
-                    ':password' => $hashed,
+                    ':password_hash' => $hashed,
                     ':role' => $role,
                     ':barangay_id' => $barangay_id
                 ]);
@@ -50,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if ($password) {
                     $hashed = password_hash($password, PASSWORD_BCRYPT);
-                    $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, role = :role, barangay_id = :barangay_id, password = :password WHERE id = :id");
+                    $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, role = :role, barangay_id = :barangay_id, password_hash = :password_hash WHERE id = :id");
                     $stmt->execute([
                         ':full_name' => $full_name,
                         ':role' => $role,
                         ':barangay_id' => $barangay_id,
-                        ':password' => $hashed,
+                        ':password_hash' => $hashed,
                         ':id' => $user_id
                     ]);
                 } else {
