@@ -42,23 +42,8 @@ if (session_status() === PHP_SESSION_NONE) {
             <ul class="navbar-nav me-auto">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="dashboard.php">📊 Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="cases.php">📋 Cases</a></li>
                     <?php if ($_SESSION['role'] === 'complainant'): ?>
                         <li class="nav-item"><a class="nav-link" href="file_case.php">📝 File Case</a></li>
-                    <?php endif; ?>
-                    <?php if (in_array($_SESSION['role'], ['barangay_staff', 'punong_barangay', 'lupon_secretary', 'system_admin'])): ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="barangayNav" role="button" data-bs-toggle="dropdown">
-                                🏘️ Barangay
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="barangayNav">
-                                <li><a class="dropdown-item" href="barangay_dashboard.php">📊 Dashboard</a></li>
-                                <li><a class="dropdown-item" href="barangay_record_entry.php">📝 Record Entry</a></li>
-                                <li><a class="dropdown-item" href="barangay_record_entry.php">📂 All Records</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="barangay_settlement_form.php">📜 Forms</a></li>
-                            </ul>
-                        </li>
                     <?php endif; ?>
                     <?php if (in_array($_SESSION['role'], ['system_admin', 'rtc_judge', 'rtc_staff'])): ?>
                         <li class="nav-item"><a class="nav-link" href="audit_logs.php">🔍 Audit Logs</a></li>
