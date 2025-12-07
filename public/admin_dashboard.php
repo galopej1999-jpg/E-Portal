@@ -120,17 +120,6 @@ $recent_users = $stmt->fetchAll();
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header bg-dark text-white">
-          <h5>Barangay Management</h5>
-        </div>
-        <div class="card-body">
-          <p>Create, edit, and manage barangay information and jurisdiction areas.</p>
-          <a href="admin_barangays.php" class="btn btn-success">Manage Barangays</a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="row mb-4">
