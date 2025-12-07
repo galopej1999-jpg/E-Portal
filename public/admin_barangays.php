@@ -8,7 +8,6 @@ if (current_user_role() !== 'system_admin') {
     die("Access denied. Admin only.");
 }
 
-$pdo = getDatabaseConnection();
 $message = '';
 $action = $_GET['action'] ?? '';
 $barangay_id = $_GET['id'] ?? null;

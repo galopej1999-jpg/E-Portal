@@ -8,8 +8,6 @@ if (current_user_role() !== 'system_admin') {
     die("Access denied. Admin only.");
 }
 
-$pdo = getDatabaseConnection();
-
 // Get statistics
 $stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
 $total_users = $stmt->fetch()['count'];
