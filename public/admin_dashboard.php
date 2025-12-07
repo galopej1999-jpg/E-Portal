@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_login();
@@ -9,31 +11,35 @@ if (current_user_role() !== 'system_admin') {
 }
 
 // Get statistics
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
-$total_users = $stmt->fetch()['count'];
+try {
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM users");
+    $total_users = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM barangay_info");
-$total_barangays = $stmt->fetch()['count'];
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM barangay_info");
+    $total_barangays = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM locations");
-$total_locations = $stmt->fetch()['count'];
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM locations");
+    $total_locations = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM cases");
-$total_cases = $stmt->fetch()['count'];
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM cases");
+    $total_cases = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM case_documents");
-$total_documents = $stmt->fetch()['count'];
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM case_documents");
+    $total_documents = $stmt->fetch()['count'];
 
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM audit_logs");
-$total_audit_logs = $stmt->fetch()['count'];
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM audit_logs");
+    $total_audit_logs = $stmt->fetch()['count'];
 
-// Get user role distribution
-$stmt = $pdo->query("SELECT role, COUNT(*) as count FROM users GROUP BY role ORDER BY count DESC");
-$user_roles = $stmt->fetchAll();
+    // Get user role distribution
+    $stmt = $pdo->query("SELECT role, COUNT(*) as count FROM users GROUP BY role ORDER BY count DESC");
+    $user_roles = $stmt->fetchAll();
 
-// Get recent users
-$stmt = $pdo->query("SELECT id, email, full_name, role, created_at FROM users ORDER BY created_at DESC LIMIT 5");
-$recent_users = $stmt->fetchAll();
+    // Get recent users
+    $stmt = $pdo->query("SELECT id, email, full_name, role, created_at FROM users ORDER BY created_at DESC LIMIT 5");
+    $recent_users = $stmt->fetchAll();
+} catch (Exception $e) {
+    die("Error loading dashboard: " . $e->getMessage());
+}
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 

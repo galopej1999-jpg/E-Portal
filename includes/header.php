@@ -9,8 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <title>eJustice Portal - Philippine Court System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/court_system.css">
+    <link href="/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/court_system.css">
 </head>
 <body>
 <!-- Philippine Court System Header -->

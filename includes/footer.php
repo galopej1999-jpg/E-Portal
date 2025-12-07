@@ -29,6 +29,6 @@
     </div>
 </footer>
 
-<script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>
